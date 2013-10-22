@@ -65,7 +65,9 @@
 			counterText: "Image {x} of {y}",	// Translate or change as you wish, or set it to false to disable counter text for image groups
 			closeKeys: [27, 88, 67],		// Array of keycodes to close Slimbox, default: Esc (27), 'x' (88), 'c' (67)
 			previousKeys: [37, 80],			// Array of keycodes to navigate to the previous image, default: Left arrow (37), 'p' (80)
-			nextKeys: [39, 78]			// Array of keycodes to navigate to the next image, default: Right arrow (39), 'n' (78)
+			nextKeys: [39, 78],			// Array of keycodes to navigate to the next image, default: Right arrow (39), 'n' (78)
+			maxWidth: null,
+			maxHeight: null
 		}, _options);
 
 		// The function is called for a single image, with URL and Title as first two arguments
@@ -189,10 +191,21 @@
 	}
 
 	function animateBox() {
+		// Scale the image down if necessary.
+		var scale = 1;
+		if (options.maxWidth) {
+			scale = Math.min(preload.width, options.maxWidth) / preload.width;
+		}
+		if (options.maxHeight) {
+			scale = Math.min(scale, Math.min(preload.height, options.maxHeight) / preload.height);
+		}
+		var w = preload.width * scale;
+		var h = preload.height * scale;
+
 		center.className = "";
-		$(image).css({backgroundImage: "url(" + activeURL + ")", visibility: "hidden", display: ""});
-		$(sizer).width(preload.width);
-		$([sizer, prevLink, nextLink]).height(preload.height);
+		$(image).css({backgroundImage: "url(" + activeURL + ")", backgroundSize: (w + "px " + h + "px"), visibility: "hidden", display: ""});
+		$(sizer).width(w);
+		$([sizer, prevLink, nextLink]).height(h);
 
 		$(caption).html(images[activeImage][1] || "");
 		$(number).html((((images.length > 1) && options.counterText) || "").replace(/{x}/, activeImage + 1).replace(/{y}/, images.length));
