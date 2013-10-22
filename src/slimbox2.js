@@ -67,7 +67,8 @@
 			previousKeys: [37, 80],			// Array of keycodes to navigate to the previous image, default: Left arrow (37), 'p' (80)
 			nextKeys: [39, 78],			// Array of keycodes to navigate to the next image, default: Right arrow (39), 'n' (78)
 			maxWidth: null,
-			maxHeight: null
+			maxHeight: null,
+			onClose: null, // Callback to be executed when Slimbox closes.
 		}, _options);
 
 		// The function is called for a single image, with URL and Title as first two arguments
@@ -250,6 +251,7 @@
 			$(overlay).stop().fadeOut(options.overlayFadeDuration, setup);
 		}
 
+		options.onClose && options.onClose();
 		return false;
 	}
 
